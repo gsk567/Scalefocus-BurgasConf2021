@@ -1,0 +1,52 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="BurgasConf.Generator.Modules" #>
+<#@ import namespace="BurgasConf.Generator.Models" #>
+<#@ import namespace="Definux.Utilities.Extensions" #>
+<template>
+	<div>
+		<!-- <#= Constants.DefaultGeneratedMessage #> -->
+		<b-table striped hover :items="items" :fields="tableFields"></b-table>
+	</div>
+</template>
+
+<script>
+// <#= Constants.DefaultGeneratedMessage #>
+	export default {
+		data() {
+			return {
+				fields: [
+				<# foreach (var property in ((List<string>)Session["Properties"])) { #>	{ key: '<#=property.ToFirstLower()#>', label: '<#=property#>', formatter: this.formatters.<#=property.ToFirstLower()#> },
+				<# } #>]
+			}
+		},
+		props: {
+			excludedFields: {
+				type: Array,
+				default() {
+					return [];
+				}
+			},
+			items: {
+				type: Array,
+				required: true
+			},
+			formatters: {
+				type: Object,
+				default() {
+					return {}
+				}
+			}
+		},
+		computed: {
+			tableFields() {
+				return this.fields.filter(x => !this.excludedFields.includes(x.key));
+			}
+		}
+	}
+</script>
+
+

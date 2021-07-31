@@ -1,0 +1,61 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="BurgasConf.Generator.Modules" #>
+<#@ import namespace="BurgasConf.Generator.Models" #>
+<#@ import namespace="BurgasConf.Generator.Extensions" #>
+<#@ import namespace="Definux.Utilities.Extensions" #>
+// <#= Constants.DefaultGeneratedMessage #>
+
+using System;
+using System.Collections;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using Prism.Mvvm;
+using System.Net.Http;
+using BurgasConfSdk.<#=FoldersNames.XamarinModels#>;
+using Newtonsoft.Json;
+
+namespace BurgasConfSdk.<#=FoldersNames.XamarinServices#>
+{
+	public interface I<#=Session["ServiceName"]#>
+	{
+<# foreach (var action in ((List<ControllerAction>)Session["Actions"])) { #>
+		Task<<#=action.ResponseType.GetBindableBuildTypeName()#>> <#=action.ActionName#>Async();
+<# } #>
+	}
+
+	public class <#=Session["ServiceName"]#> : I<#=Session["ServiceName"]#>
+	{
+		private readonly IConfiguration configuration;
+
+		public <#=Session["ServiceName"]#>(IConfiguration configuration)
+		{
+			this.configuration = configuration;
+		}
+
+<# foreach (var action in ((List<ControllerAction>)Session["Actions"])) { #>
+		public async Task<<#=action.ResponseType.GetBindableBuildTypeName()#>> <#=action.ActionName#>Async()
+		{
+			try
+			{
+				using (var httpClient = new HttpClient { BaseAddress = this.configuration.BaseUrl })
+				{
+					HttpResponseMessage response = await httpClient.GetAsync("<#=action.Route#>");
+
+					string responseString = await response.Content.ReadAsStringAsync();
+					var result = JsonConvert.DeserializeObject<<#=action.ResponseType.GetBindableBuildTypeName()#>>(responseString);
+
+					return result;
+				}
+			}
+			catch (Exception)
+			{
+				return default;
+			}
+		}
+<# } #>
+	}
+}
