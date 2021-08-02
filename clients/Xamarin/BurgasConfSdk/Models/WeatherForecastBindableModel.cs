@@ -12,6 +12,7 @@ namespace BurgasConfSdk.Models
 		private Int32 temperatureC;
 		private Int32 temperatureF;
 		private String summary;
+		private String note;
 
 		public DateTime Date
 		{
@@ -58,6 +59,18 @@ namespace BurgasConfSdk.Models
 			set
 			{
 				SetProperty(ref this.summary, value);
+			}
+		}
+
+		public String Note
+		{
+			get
+			{
+				return this.note;
+			}
+			set
+			{
+				SetProperty(ref this.note, value);
 			}
 		}
 	}

@@ -15,6 +15,7 @@
 					{ key: 'temperatureC', label: 'TemperatureC', formatter: this.formatters.temperatureC },
 					{ key: 'temperatureF', label: 'TemperatureF', formatter: this.formatters.temperatureF },
 					{ key: 'summary', label: 'Summary', formatter: this.formatters.summary },
+					{ key: 'note', label: 'Note', formatter: this.formatters.note },
 				]
 			}
 		},
